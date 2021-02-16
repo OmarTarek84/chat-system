@@ -1,0 +1,33 @@
+.backdrop {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 100;
+    top: 0;
+    left: 0;
+    .card {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        min-width: 350px;
+        transform: translate(-50%, -50%);
+        border-radius: 9px;
+        background-color: white;
+        padding-bottom: 10px;
+        .title {
+            background-color: $dark-blue-color;
+            padding: 5px 0;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 9px;
+            h3 {
+                text-align: center;
+                margin: 0;
+                color: $yellow-color;
+            }
+        }
+        .form {
+            padding: 0 10px;
+        }
+    }
+}

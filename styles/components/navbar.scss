@@ -1,0 +1,77 @@
+header.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $dark-blue-color;
+    box-shadow: 0 3px 4px black;
+    padding: 6px 25px;
+    .logo {
+        h2 {
+            color: white;
+            margin: 0;
+            font-weight: bold;
+        }
+    }
+    .user {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .image {
+            margin-right: 13px;
+            width: 56px;
+            height: 56px;
+            img {
+                border-radius: 50%;
+            }
+        }
+        .fullname {
+            color: white;
+        }
+        .dropDown {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            svg {
+                fill: white;
+                width: 26px;
+                height: 26px;
+            }
+            .dropMenu {
+                position: absolute;
+                background-color: white;
+                box-shadow: 0 3px 4px black;
+                border-radius: 6px;
+                top: 36px;
+                right: 3px;
+                width: 140px;
+                button {
+                    display: block;
+                    font-size: 15px;
+                    text-decoration: none;
+                    padding: 10px 0;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    color: black;
+                    background-color: transparent;
+                    outline: none;
+                    border: none;
+                    width: 100%;
+                    &:hover {
+                        background-color: $grey-color;
+                    }
+                    &:first-child {
+                        border-bottom-left-radius: 0;
+                        border-bottom-right-radius: 0;
+                    }
+                    &:last-child {
+                        border-top-left-radius: 0;
+                        border-top-right-radius: 0;
+                    }
+                }
+            }
+        }
+    }
+}

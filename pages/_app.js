@@ -1,7 +1,23 @@
-import '../styles/globals.css'
+import { Provider } from 'react-redux';
+import store from '../redux/store';
+import NProgress from "nprogress";
+import Router from "next/router";
+import '../styles/main.scss';
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
+Router.onRouteChangeStart = url => {
+  NProgress.start();
+};
 
-export default MyApp
+Router.onRouteChangeComplete = () => NProgress.done();
+
+Router.onRouteChangeError = () => NProgress.done();
+
+const MyApp = ({ Component, pageProps }) => {
+  return (
+    <Provider store={store}>
+      <Component {...pageProps} />
+    </Provider>
+  )
+};
+
+export default MyApp;

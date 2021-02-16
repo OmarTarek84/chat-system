@@ -1,0 +1,54 @@
+.authParent {
+    min-height: 100vh;
+    background-image: linear-gradient(to right bottom, #6A9113, #141517);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    .authCard {
+        padding: 8px;
+        border: 2px solid white;
+        border-radius: 9px;
+        min-width: 45vw;
+        @media screen and (min-width: 1200px) {
+            width: 600px;
+            min-width: auto;
+        }
+        @media screen and (max-width: 900px) {
+            min-width: 65vw;
+        }
+        @media screen and (max-width: 576px) {
+            min-width: 85vw;
+        }
+        h2 {
+            text-align: center;
+            color: white;
+        }
+        .errorAuthMsgFromServer {
+            text-align: center;
+            color: red;
+            font-size: 15px;
+            margin: 3px 0;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+
+        }
+    }
+    .accountexist {
+        margin-top: 5px;
+        span {
+            color: white;
+        }
+        button {
+            background-color: transparent;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 17px;
+            color: $blue-color;
+            outline: none;
+        }
+    }
+}

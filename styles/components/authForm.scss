@@ -1,0 +1,69 @@
+form.authform {
+    input, select {
+        display: block;
+        padding: 7px 12px;
+        border-radius: 6px;
+        width: 100%;
+        outline: none;
+        margin-top: 10px;
+    }
+    p.error {
+        color: red;
+        margin: 0;
+        font-size: 12px;
+        padding-left: 6px;
+    }
+    button.submitRegister {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 13px;
+        width: 60%;
+        padding: 8px 0;
+        cursor: pointer;
+        background-color: $green-color;
+        color: darkblue;
+        &:disabled {
+            opacity: .4;
+        }
+    }
+    .imageinputParent {
+        display: flex;
+        align-items: center;
+        input {
+            flex: 1;
+        }
+        span {
+            color: green;
+            font-size: 11px;
+        }
+    }
+    .btnActions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        button {
+            border-radius: 9px;
+            padding: 3px;
+            width: 90px;
+            color: white;
+            cursor: pointer;
+            border: none;
+            margin-top: 15px;
+            outline: none;
+            &:first-child {
+                background-color: red;
+            }
+            &:last-child {
+                background-color: $dark-blue-color;
+                &:disabled {
+                    opacity: .4;
+                }
+            }
+        }
+    }
+    .imageP {
+        text-align: center;
+    }
+}
