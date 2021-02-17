@@ -11,6 +11,7 @@ const handle = app.getRequestHandler();
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const chatRoutes = require('./routes/chat');
 
 app.prepare().then(() => {
   const server = express();
@@ -22,6 +23,7 @@ app.prepare().then(() => {
   );
   server.use('/auth', authRoutes);
   server.use('/user', userRoutes);
+  server.use('/chat', chatRoutes);
 
   server.all("*", (req, res) => {
     return handle(req, res);

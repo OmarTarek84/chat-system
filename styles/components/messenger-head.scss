@@ -1,0 +1,89 @@
+.head {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $grey-color;
+    padding: 12px 0;
+    .onlineusers {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        flex-wrap: wrap;
+        .username-onlinestatus {
+            display: flex;
+            align-items: center;
+            margin: 0 20px;
+            .first-lastname {
+                font-weight: bold;
+                font-size: 18px;
+            }
+            .offline-online {
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+                background-color: green;
+                border-radius: 50%;
+                margin-left: 5px;
+            }
+        }
+    }
+    .chatActions {
+        position: relative;
+        .btn-openselect {
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            outline: none;
+            height: 100%;
+            justify-content: center;
+            width: 20px;
+            align-items: center;
+            span {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: $dark-blue-color;
+                position: relative;
+                &:first-of-type {
+                    bottom: 3px;
+                }
+                &:last-of-type {
+                    top: 3px;
+                }
+            }
+        }
+        .actionsBoxMenu {
+            position: absolute;
+            right: 50%;
+            background-color: white;
+            box-shadow: 0 1px 5px 0px black;
+            border-radius: 6px;
+            min-width: 185px;
+            .menus-select {
+                button {
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    padding: 7px 12px;
+                    width: 100%;
+                    background-color: white;
+                    &:hover {
+                        background-color: $grey-color;
+                    }
+                    svg {
+                        width: 20px;
+                        height: 20px;
+                        fill: $dark-blue-color;
+                    }
+                    span {
+                        margin-left: 3px;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+}

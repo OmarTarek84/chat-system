@@ -10,6 +10,9 @@ header.navbar {
             color: white;
             margin: 0;
             font-weight: bold;
+            @media screen and (max-width: 500px) {
+                font-size: 16px;
+            }
         }
     }
     .user {
@@ -19,10 +22,14 @@ header.navbar {
         align-items: center;
         .image {
             margin-right: 13px;
-            width: 56px;
-            height: 56px;
             img {
                 border-radius: 50%;
+                width: 56px;
+                height: 56px;
+                @media screen and (max-width: 500px) {
+                    width: 30px;
+                    height: 30px;
+                }
             }
         }
         .fullname {

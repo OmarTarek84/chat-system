@@ -56,8 +56,6 @@ const Navbar = () => {
           <img
             src={avatar && avatar !== 'null' ? avatar : "/images/profilePic.jpeg"}
             alt="image"
-            width={60}
-            height={60}
           />
         </div>
         <div className="fullname">

@@ -1,0 +1,18 @@
+form {
+    position: relative;
+    input {
+        width: 100%;
+        border: none;
+        background-color: $grey-color;
+        border-radius: 10px;
+        padding: 10px 30px 10px 5px;
+        outline: none;
+    }
+    img {
+        position: absolute;
+        top: 50%;
+        right: 30px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+}

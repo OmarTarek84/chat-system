@@ -2,7 +2,14 @@
 @import "components/navbar.scss";
 @import "auth.scss";
 @import "components/authForm.scss";
+@import "homepage.scss";
 @import "components/UpdateProfileModal.scss";
+@import "components/ChatBox.scss";
+@import 'emoji-mart/css/emoji-mart.css';
+@import "components/messenger.scss";
+@import "components/messenger-head.scss";
+@import "components/messenger-messages.scss";
+@import "components/messenger-chatInput.scss";
 
 html,
 body {
@@ -10,6 +17,11 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-color: $grey-color;
 }
 
 main {

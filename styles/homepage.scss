@@ -1,0 +1,11 @@
+.Home {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    min-height: 80vh;
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+}

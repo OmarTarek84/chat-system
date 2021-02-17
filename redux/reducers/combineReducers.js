@@ -1,8 +1,11 @@
+import chatReducer from "./chat";
+import userReducer from "./user";
+
 const { combineReducers } = require("redux");
-const { default: userReducer } = require("./user");
 
 const rootReducer = combineReducers({
-    user: userReducer
+    user: userReducer,
+    chat: chatReducer
 });
 
 export default rootReducer;

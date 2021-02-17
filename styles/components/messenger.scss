@@ -1,0 +1,16 @@
+.messenger {
+    flex: 0 0 73%;
+    background-color: white;
+    border-radius: 6px;
+    padding: 9px;
+    border: 1px solid $dark-blue-color;
+    display: flex;
+    flex-direction: column;
+    @media screen and (max-width: 1000px) {
+        flex: 0 0 65%;
+    }
+    @media screen and (max-width: 767px) {
+        margin-top: 25px;
+        flex: 1;
+    }
+}
