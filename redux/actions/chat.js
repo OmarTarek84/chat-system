@@ -13,11 +13,12 @@ export const fetchChats = () => {
                     Authorization: 'Bearer ' + token
                 }
             });
-            dispatch({
+            const result = await dispatch({
                 type: FETCH_CHATS_SUCCESS,
                 chats: data
             });
             console.log('CHATS FETCH', data);
+            return result;
         } catch(err) {
             const errorMessage = err.response && err.response.data && err.response.data.message
                 ? err.response.data.message

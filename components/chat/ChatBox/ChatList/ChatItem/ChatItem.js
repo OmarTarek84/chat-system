@@ -1,9 +1,12 @@
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const ChatItem = ({chat}) => {
 
   const chatUsers = chat.chatdetails.users.filter(p => p.email !== localStorage.getItem('email'));
   const mappedUsers = chatUsers.map(u => u.full_name);
+
+  const router = useRouter();
 
   const renderImages = () => {
     const firstUserProfilePic = chatUsers[0].avatar || "/images/profilePic.jpeg"; 
@@ -22,8 +25,25 @@ const ChatItem = ({chat}) => {
     }
   };
 
+  const changeChat = () => {
+    if (router.query.chatId != chat.chatdetails.chat_id) {
+      router.replace({
+        pathname: '',
+        query: {
+          chatId: encodeURI(chat.chatdetails.chat_id)
+        }
+      });
+    }
+  };
+ 
   return (
-    <div className="friend">
+    <div 
+      className="friend"
+      onClick={changeChat}
+      style={{
+        backgroundColor: router.query.chatId == chat.chatdetails.chat_id ? 'rgb(225, 222, 230)': 'transparent'
+      }}
+    >
       <div className="img-details" style={{
         paddingLeft: chat.chatdetails.chat_type === 'dual' ? '0': '40px'
       }}>

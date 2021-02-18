@@ -1,5 +1,6 @@
 form {
     position: relative;
+    margin-top: 3px;
     input {
         width: 100%;
         border: none;
@@ -8,7 +9,7 @@ form {
         padding: 10px 30px 10px 5px;
         outline: none;
     }
-    img {
+    img.emojiPi {
         position: absolute;
         top: 50%;
         right: 30px;

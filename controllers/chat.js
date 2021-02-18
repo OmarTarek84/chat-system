@@ -39,3 +39,126 @@ exports.fetchChats = async (req, res) => {
     return res.status(500).json({ message: "Server Error" });
   }
 };
+
+
+exports.getChatMessages = async (req, res, next) => {
+
+  if (!req.isAuth) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+
+  if (!req.query.chatId) {
+    return res.status(500).json({ message: "chat id is required" });
+  }
+
+  try {
+    const pageSize = +req.query.pageSize || 30;
+    const currentPage = +req.query.currentPage || 1;
+
+    const getUserChats = await db.query(`
+      select user_id, chat_id from chatusers where user_id = $1;
+    `, [req.user.user_id]);
+
+    const foundUserInChat = getUserChats.rows.find(p => p.chat_id == +req.query.chatId);
+    
+    if (!foundUserInChat) {
+      return res.status(500).json({message: 'You do not have the right to access this chat or chat has been deleted'});
+    }
+    
+    const foundMsgs = await db.query(`
+      select messages.message_id, messages.message, messages.chat_id, users.first_name, messages.type, users.last_name, users.gender, users.avatar, users.email,
+      (select count(messages.message_id) as "total_number_of_messages" from messages where chat_id = $1)
+      from messages as messages
+      inner join users as users using(user_id)
+      where chat_id = $1
+      order by message_id desc
+      offset $2
+      limit $3
+    `, [
+      req.query.chatId,
+      pageSize * currentPage - pageSize,
+      pageSize
+    ]);
+
+    const totalItems = foundMsgs.rows[0] ? foundMsgs.rows[0].total_number_of_messages: 1;
+
+    return res.status(200).json({
+      messages: foundMsgs.rows,
+      pages: Math.ceil(totalItems / pageSize),
+      currentPage: currentPage,
+      pageSize: pageSize,
+      chat_id: req.query.chatId
+    });
+
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server Error" });
+  }
+
+};
+
+
+exports.sendMessages = async (req, res, next) => {
+  if (!req.isAuth) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+
+  if (!req.query.chatId) {
+    return res.status(500).json({ message: "chat id is required" });
+  }
+
+  try {
+    const message = req.body.message;
+    const messageType = req.body.messageType;
+    const getUserChats = await db.query(`
+      select user_id, chat_id from chatusers where user_id = $1;
+    `, [req.user.user_id]);
+
+    const foundUserInChat = getUserChats.rows.find(p => p.chat_id == req.query.chatId);
+
+    if (!foundUserInChat) {
+      return res.status(500).json({message: 'You do not have the right to access this chat or chat has been deleted'});
+    }
+
+    const newMsgRows = await db.query(`
+      insert into messages (
+        user_id,
+        chat_id,
+        createdat,
+        "type",
+        message
+      ) values (
+        $1,
+        $2,
+        now(),
+        $3,
+        $4
+      )
+      RETURNING message_id
+    `, [
+      req.user.user_id,
+      req.query.chatId,
+      messageType,
+      message
+    ]);
+
+    const foundMsg = await db.query(`
+      select messages.message_id, messages.message, messages.chat_id, users.first_name, messages.type, users.last_name, users.gender, users.avatar, users.email      from messages as messages
+      inner join users as users using(user_id)
+      where chat_id = $1 and message_id = $2
+      order by message_id asc
+    `, [
+      req.query.chatId,
+      newMsgRows.rows[0].message_id
+    ]);
+
+    console.log(newMsgRows.rows[0]);
+    console.log(foundMsg.rows[0]);
+
+    return res.status(200).json(foundMsg.rows[0]);
+
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server Error" });
+  }
+};

@@ -1,17 +1,40 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { Picker } from "emoji-mart";
+import { useDispatch } from "react-redux";
+import {sendMessage} from '../../../../redux/actions/messages';
+import { useRouter } from "next/router";
 
-const ChatInput = ({ sendMessage }) => {
-  const { register, handleSubmit } = useForm({
-    defaultValues: { message: "" },
-  });
+const ChatInput = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [inputVal, setinputVal] = useState('');
+
   const emojiRef = useRef();
   const smileyfaceRef = useRef();
+  const inputRef = useRef();
+
+  const router = useRouter();
+
+  const dispatch = useDispatch();
 
   const selectEmoji = emoji => {
-    console.log(emoji);
+    const startPosition = inputRef.current.selectionStart;
+    const endPosition = inputRef.current.selectionEnd;
+    const emojiLength = emoji.native.length;
+    const value = inputRef.current.value;
+    setinputVal(
+      value.substring(0, startPosition) + emoji.native + value.substring(endPosition, value.length)
+    );
+    inputRef.current.focus();
+    inputRef.current.selectionEnd = endPosition + emojiLength;
+  };
+
+  const sendMessageReq = e => {
+    e.preventDefault();
+    dispatch(sendMessage(+router.query.chatId, inputVal, 'text')).then(() => {
+      setinputVal('');
+      const list = document.getElementById("sc");
+      list.scrollTop = list.scrollHeight - list.clientHeight - 1;
+    });
   };
 
   useEffect(() => {
@@ -30,17 +53,20 @@ const ChatInput = ({ sendMessage }) => {
   }, [showEmojiPicker]);
 
   return (
-    <form className="chatInput" onSubmit={handleSubmit(sendMessage)}>
+    <form className="chatInput" onSubmit={sendMessageReq}>
       <input
         placeholder="Type Your Message..."
         type="text"
         name="message"
-        ref={register({ required: true })}
+        ref={inputRef}
+        value={inputVal}
+        onChange={e => setinputVal(e.target.value)}
       />
       <img
         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
         src="/images/happy.png"
         alt="fsdf"
+        className="emojiPi"
         ref={smileyfaceRef}
         width={25}
         height={25}

@@ -1,0 +1,19 @@
+.messageitem {
+    display: flex;
+    &:not(:first-child) {
+        margin-top: 7px;
+    }
+    .message {
+        border-radius: 19px;
+        padding: 7px 12px;
+        max-width: 60%;
+        span.firstlastname {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        p.msg {
+            font-size: 14px;
+            margin: 0;
+        }
+    }
+}
