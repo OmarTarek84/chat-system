@@ -1,0 +1,24 @@
+.users {
+    margin-top: 13px;
+    max-height: 250px;
+    overflow-y: auto;
+    .user {
+        margin-top: 7px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid $grey-color;
+        padding-bottom: 2px;
+        span {
+
+        }
+        button {
+            border-radius: 10px;
+            background-color: $dark-blue-color;
+            padding: 4px;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+    }
+}

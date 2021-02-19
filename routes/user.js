@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { getUser, updateProfile, getSignedUrl } = require('../controllers/user');
+const { getUser, updateProfile, getSignedUrl, searchUsers } = require('../controllers/user');
 const router = express.Router();
 const isAuth = require('../middlewares/authMiddleware');
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -16,5 +16,7 @@ router.put('/update', isAuth, [
         .matches(emailRegex).withMessage('Email is not valid'),
     body('gender').notEmpty().withMessage('Gender is required'),
 ], updateProfile);
+
+router.get('/search', isAuth, searchUsers);
 
 module.exports = router;

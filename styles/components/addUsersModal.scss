@@ -1,0 +1,92 @@
+.backdrop-addusers {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 100;
+    top: 0;
+    left: 0;
+    .card {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        min-width: 350px;
+        transform: translate(-50%, -50%);
+        border-radius: 9px;
+        background-color: white;
+        padding-bottom: 10px;
+        .title {
+            background-color: $dark-blue-color;
+            padding: 5px 0;
+            border-top-left-radius: 9px;
+            border-top-right-radius: 9px;
+            h3 {
+                text-align: center;
+                margin: 0;
+                color: $yellow-color;
+            }
+        }
+        .card-det {
+            padding: 0 20px;
+            .p {
+                font-size: 14px;
+                color: rgb(34, 34, 34);
+                margin: 0;
+                margin-top: 17px;
+            }
+            .users-added {
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                align-items: center;
+                padding: 0 7px;
+                margin-top: 6px;
+                .user-added {
+                    margin-top: 2px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 3px 7px 3px 2px;
+                    background-color: #FFD601;
+                    border-radius: 11px;
+                    flex: 0 0 30%;
+                    margin-left: 2%;
+                    span {
+                        color: $dark-blue-color;
+                        &.names {
+                            font-size: 13px;
+                        }
+                        &.close {
+                            cursor: pointer;
+                            font-weight: bold;
+                            font-size: 10px;
+                            margin-left: 6px;
+                        }
+                    }
+                }
+            }
+            input {
+                margin-top: 15px;
+                width: 100%;
+                padding: 7px 5px;
+                border-radius: 4px;
+                outline: none;
+                background-color: $grey-color;
+            }
+            .btn-actions {
+                display: flex;
+                justify-content: space-around;
+                margin-top: 12px;
+                button {
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: bolder;
+                    cursor: pointer;
+                    padding: 4px 7px;
+                    width: 80px;
+                    background-color: $dark-blue-color;
+                }
+            }
+        }
+    }
+}

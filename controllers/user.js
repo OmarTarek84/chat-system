@@ -84,3 +84,62 @@ exports.getSignedUrl = (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+exports.searchUsers = async (req, res, next) => {
+  if (!req.isAuth) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+
+  const chatId = +req.query.chatId || null;
+  const searchKey = req.query.searchKey || '';
+  const filterUsers = req.query.usersFilter || '';
+
+  let params = [];
+  for(let i = 1; i <= filterUsers.split(',').length; i++) {
+    params.push('$' + (i + 2));
+  }
+  let response;
+
+  try {
+    if (chatId === null) {
+      // add chat
+      response = await db.query(`
+        select first_name, last_name, email, gender, avatar
+        from users
+        where 
+          user_id != $1
+          and (
+              first_name ilike $2 or last_name ilike $2
+          )
+          and users.email not in (${params.join(',')})
+      `, [
+        req.user.user_id,
+        '%' + searchKey + '%',
+        ...filterUsers.split(',')
+      ]);
+    } else {
+      // add user to existing chat
+      response = await db.query(`
+          select chat_id, users.first_name, users.last_name, users.email, users.gender, users.avatar
+          from users as users
+          left join chatusers as chatusers using(user_id)
+          where 
+          users.user_id not in (select user_id from chatusers where chat_id = $1) and users.email not in (${params.join(',')})
+          and (chatusers.chat_id != $1 or chatusers.chat_id is null)
+          and (
+              users.first_name ilike $2 or users.last_name ilike $2
+          )
+      `, [
+        chatId,
+        '%' + searchKey + '%',
+        ...filterUsers.split(',')
+      ]);
+    }
+    return res.status(200).json(response.rows);
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+
+
+};

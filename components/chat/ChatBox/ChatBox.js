@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchChats } from "../../../redux/actions/chat";
+import AddUsersModal from "../../AddUsersModal/AddUsersModal";
 import ChatList from "./ChatList/ChatList";
 
 const ChatBox = () => {
 
   const {chats, chatLoading, chatError} = useSelector(state => state.chat);
+  const [addUsersModal, setaddUsersModal] = useState(false);
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -32,13 +34,16 @@ const ChatBox = () => {
   }, [dispatch]);
 
   return (
+    <>
     <div className="ChatBox">
       <div className="head">
         <h3>Chats</h3>
-        <button>Add</button>
+        <button onClick={() => setaddUsersModal(true)}>Add</button>
       </div>
       <ChatList chats={chats} chatLoading={chatLoading} />
     </div>
+    {addUsersModal && <AddUsersModal addNewChat={true} closeModal={() => setaddUsersModal(false)} />}
+    </>
   );
 };
 

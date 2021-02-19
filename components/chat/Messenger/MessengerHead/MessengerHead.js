@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import AddUsersModal from "../../../AddUsersModal/AddUsersModal";
 import UsersOnline from "./UsersOnline/UsersOnline";
 
 const MessengerHead = () => {
   const [openChatActionsBox, setopenChatActionsBox] = useState(false);
+  const [addUsersModal, setaddUsersModal] = useState(false);
 
   const boxMenuRef = useRef();
 
@@ -21,6 +23,7 @@ const MessengerHead = () => {
   }, [openChatActionsBox]);
 
   return (
+    <>
     <div className="head">
       <div className="onlineusers">
         <UsersOnline />
@@ -37,7 +40,7 @@ const MessengerHead = () => {
         {openChatActionsBox && (
           <div className="actionsBoxMenu" ref={boxMenuRef}>
             <div className="menus-select">
-              <button>
+              <button onClick={() => setaddUsersModal(true)}>
                 <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                   <defs></defs>
                   <title />
@@ -149,6 +152,8 @@ const MessengerHead = () => {
         )}
       </div>
     </div>
+    {addUsersModal && <AddUsersModal addNewChat={false} closeModal={() => setaddUsersModal(false)} />}
+    </>
   );
 };
 
