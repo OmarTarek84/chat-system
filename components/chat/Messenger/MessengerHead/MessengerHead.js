@@ -1,4 +1,7 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteChat, leaveChat } from "../../../../redux/actions/chat";
 import AddUsersModal from "../../../AddUsersModal/AddUsersModal";
 import UsersOnline from "./UsersOnline/UsersOnline";
 
@@ -6,7 +9,17 @@ const MessengerHead = () => {
   const [openChatActionsBox, setopenChatActionsBox] = useState(false);
   const [addUsersModal, setaddUsersModal] = useState(false);
 
+  const {chats} = useSelector(state => state.chat);
+  const {email} = useSelector(state => state.user);
+
+  const dispatch = useDispatch();
+
+  const router = useRouter();
+
+  const currentChat = chats.find(chat => chat.chatdetails.chat_id == router.query.chatId);
+
   const boxMenuRef = useRef();
+  
 
   useEffect(() => {
     const closeChatBoxOnClick = (evt) => {
@@ -22,13 +35,46 @@ const MessengerHead = () => {
     };
   }, [openChatActionsBox]);
 
+  const deleteChatReq = () => {
+    dispatch(deleteChat(router.query.chatId)).then(() => {
+        setopenChatActionsBox(false);
+        const beforeChatExist = chats[chats.length - 2] && chats[chats.length - 2].chatdetails.chat_id;
+        router.replace({
+          pathname: '',
+          query: {
+            chatId: beforeChatExist ?
+                      encodeURI(chats[chats.length - 2].chatdetails.chat_id):
+                        chats[0] ? chats[0].chatdetails.chat_id: undefined
+          }
+        });
+    });
+  };
+
+  const leaveChatReq = async() => {
+    const resDispatch = await dispatch(leaveChat(router.query.chatId));
+    if (resDispatch.type === 'LEAVE_CHAT') {
+      setopenChatActionsBox(false);
+      const beforeChatExist = chats[chats.length - 2] && chats[chats.length - 2].chatdetails.chat_id;
+      router.replace({
+        pathname: '',
+        query: {
+          chatId: beforeChatExist ?
+                    encodeURI(chats[chats.length - 2].chatdetails.chat_id):
+                      chats[0] ? chats[0].chatdetails.chat_id: undefined
+        }
+      });
+    }
+  };
+
   return (
     <>
     <div className="head">
       <div className="onlineusers">
         <UsersOnline />
       </div>
-      <div className="chatActions">
+      <div className="chatActions" style={{
+        display: router.query.chatId && router.query.chatId != null ? 'block': 'none'
+      }}>
         <button
           className="btn-openselect"
           onClick={() => setopenChatActionsBox(!openChatActionsBox)}
@@ -83,7 +129,9 @@ const MessengerHead = () => {
                 </svg>
                 <span>Add User To Chat</span>
               </button>
-              <button>
+              <button onClick={leaveChatReq} style={{
+                display: currentChat && currentChat.chatdetails && currentChat.chatdetails.created_by === email ? 'none': 'flex'
+              }}>
                 <svg
                   height="48"
                   id="svg8"
@@ -105,7 +153,11 @@ const MessengerHead = () => {
                 </svg>
                 <span>Leave Chat</span>
               </button>
-              <button>
+              <button 
+                style={{
+                  display: currentChat && currentChat.chatdetails && currentChat.chatdetails.created_by === email ? 'flex': 'none'
+                }}
+                onClick={deleteChatReq}>
                 <svg id="Layer_1" version="1.1" viewBox="0 0 64 64">
                   <g>
                     <g
@@ -152,7 +204,7 @@ const MessengerHead = () => {
         )}
       </div>
     </div>
-    {addUsersModal && <AddUsersModal addNewChat={false} closeModal={() => setaddUsersModal(false)} />}
+    {addUsersModal && <AddUsersModal addNewChat={false} chatId={router.query.chatId} closeModal={() => setaddUsersModal(false)} />}
     </>
   );
 };

@@ -9,7 +9,7 @@ const ChatItem = ({chat}) => {
   const router = useRouter();
 
   const renderImages = () => {
-    const firstUserProfilePic = chatUsers[0].avatar || "/images/profilePic.jpeg"; 
+    const firstUserProfilePic = chatUsers[0] && chatUsers[0].avatar || "/images/profilePic.jpeg"; 
     const secondUserProfilePic = chatUsers[1] && chatUsers[1].avatar ? chatUsers[1].avatar : "/images/profilePic.jpeg"; 
     if (chat.chatdetails.chat_type === 'dual') {
       return (

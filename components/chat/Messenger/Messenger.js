@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 import ChatInput from "./ChatInput/ChatInput";
 import Messages from "./Messages/Messages";
@@ -5,11 +6,13 @@ import MessengerHead from "./MessengerHead/MessengerHead";
 
 const Messenger = () => {
 
+  const router = useRouter();
+
   return (
     <div className="messenger">
         <MessengerHead />
         <Messages />
-        <ChatInput />
+        {router.query.chatId && router.query.chatId != null && <ChatInput />}
     </div>
   );
 };

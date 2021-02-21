@@ -29,6 +29,9 @@ body {
 
 main {
   padding: 0 25px;
+  @media screen and (max-width: 450px) {
+    padding: 0 10px;
+  }
 }
 
 * {

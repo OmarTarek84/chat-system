@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import UserSearchList from "./UserSearchList/UserSearchList";
 import axios from '../../axios/axios';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import UsersAddedList from "./UsersAddedList/UsersAddedList";
+import { addChat, addUsersToChat } from "../../redux/actions/chat";
 
-const AddUsersModal = ({closeModal, addNewChat}) => {
+const AddUsersModal = ({closeModal, addNewChat, chatId}) => {
   const [users, setUsers] = useState([]);
   const [usersAdded, setUsersAdded] = useState([]);
   const router = useRouter();
+
+  const dispatch = useDispatch();
 
   const {token} = useSelector(state => state.user);
 
@@ -37,8 +40,33 @@ const AddUsersModal = ({closeModal, addNewChat}) => {
     setUsersAdded(usersAdded.filter(u => u.email !== email));
   };
 
-  const addChatReq = () => {
-    console.log();
+  const addChatReq = async() => {
+
+    const usersMails = usersAdded.map(user => user.email);
+
+    if (addNewChat) {
+
+
+      const resDispatchAddChat = await dispatch(addChat(usersMails));
+      if (resDispatchAddChat.type === 'ADD_CHAT') {
+        router.replace({
+          pathname: '',
+          query: {
+            chatId: resDispatchAddChat.chat.chatdetails.chat_id
+          }
+        });
+      }
+
+
+    } else {
+
+      if (chatId === undefined) return null;
+
+      const resDispatch = await dispatch(addUsersToChat(chatId, usersMails));
+      
+
+    }
+    closeModal();
   };
 
   return (

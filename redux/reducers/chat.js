@@ -1,4 +1,4 @@
-import { FETCH_CHATS_SUCCESS, FETCH_CHATS_ERROR, FETCH_CHATS_LOADING, LOGOUT, NEW_MESSAGE } from "../actions/actionTypes";
+import { FETCH_CHATS_SUCCESS, FETCH_CHATS_ERROR, FETCH_CHATS_LOADING, LOGOUT, NEW_MESSAGE, ADD_CHAT, DELETE_CHAT, ADD_USERS_TO_CHAT, LEAVE_CHAT } from "../actions/actionTypes";
 
 const initialState = {
     chats: [],
@@ -37,11 +37,42 @@ const chatReducer = (state = initialState, action) => {
                 ...state,
                 chats: allChats
             };
+        case ADD_CHAT:
+            return {
+                ...state,
+                chats: [...state.chats, action.chat]
+            };
         case LOGOUT:
             return {
                 chats: [],
                 chatLoading: false,
                 chatError: null,
+        };
+        case DELETE_CHAT:
+            const allChatsT = [...state.chats];
+            const filteredChats = allChatsT.filter(chat => chat.chatdetails.chat_id != action.chat_id);
+            return {
+                ...state,
+                chats: filteredChats
+            };
+        case ADD_USERS_TO_CHAT:
+            const allAChats = [...state.chats];
+            const targetChatIndex = allAChats.findIndex(c => c.chatdetails.chat_id == action.chatId);
+            if (targetChatIndex > -1) {
+                allAChats[targetChatIndex].chatdetails.chat_type = 'group';
+                allAChats[targetChatIndex].chatdetails.users.push(...action.addedUsers);
+            }
+            return {
+                ...state,
+                chats: allAChats
+            };
+        case LEAVE_CHAT:
+            const allChatsToFetch = [...state.chats];
+            const targetChatFIndex = allChatsToFetch.findIndex(c => c.chatdetails.chat_id == action.chatId);
+            allChatsToFetch.splice(targetChatFIndex, 1);
+            return {
+                ...state,
+                chats: allChatsToFetch
             };
         default:
             return state;

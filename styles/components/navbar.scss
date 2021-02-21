@@ -48,6 +48,7 @@ header.navbar {
             }
             .dropMenu {
                 position: absolute;
+                z-index: 3;
                 background-color: white;
                 box-shadow: 0 3px 4px black;
                 border-radius: 6px;

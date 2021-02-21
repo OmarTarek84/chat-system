@@ -120,7 +120,7 @@ exports.searchUsers = async (req, res, next) => {
     } else {
       // add user to existing chat
       response = await db.query(`
-          select chat_id, users.first_name, users.last_name, users.email, users.gender, users.avatar
+          select distinct on (users.email) chat_id, users.first_name, users.last_name, users.email, users.gender, users.avatar
           from users as users
           left join chatusers as chatusers using(user_id)
           where 

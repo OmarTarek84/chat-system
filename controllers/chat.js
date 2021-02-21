@@ -155,8 +155,13 @@ exports.sendMessages = async (req, res, next) => {
       newMsgRows.rows[0].message_id
     ]);
 
-    console.log(newMsgRows.rows[0]);
-    console.log(foundMsg.rows[0]);
+    await db.query(`
+      update chats set latest_message = $1, latest_message_from = $2 where chat_id = $3
+    `, [
+      message,
+      req.user.first_name,
+      req.query.chatId
+    ]);
 
     return res.status(200).json(foundMsg.rows[0]);
 
@@ -173,13 +178,14 @@ exports.addChat = async (req, res, next) => {
   }
 
   try {
-    const usersToBeAdded = req.body.users;
-    if (usersToBeAdded.length <= 0) {
+    if (req.body.users.length <= 0) {
       return res.status(500).json({ message: "No users added!" });
     }
 
+    const usersToBeAdded = [...req.body.users, req.user.email];
+
     try {
-      const tableType = usersToBeAdded.length > 1 ? 'group': 'dual';
+      const tableType = usersToBeAdded.length > 2 ? 'group': 'dual';
 
       const offset = 1;
       const selectSQLPlaceholders = usersToBeAdded.map(function(name,i) { 
@@ -240,6 +246,115 @@ exports.addChat = async (req, res, next) => {
       console.log(err);
       return res.status(500).json({ message: "Server Error" });
     }
+
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server Error" });
+  }
+
+};
+
+
+exports.deleteChat = async (req, res) => {
+  if (!req.isAuth) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+
+  try {
+    const chatId = +req.query.chatId;
+    if (chatId == null || chatId == undefined) {
+      return res.status(500).json({ message: "No chat Id is provided" });
+    }
+    const foundChat = await db.query(`select created_by, chat_id from chats where chat_id = $1`, [chatId]);
+    if (foundChat.rows[0].created_by != req.user.user_id) {
+      return res.status(500).json({ message: "Only the one who created the chat can delete it" });
+    }
+
+    const chatToBeDeletedId = foundChat.rows[0].chat_id;
+    await db.query(`delete from chatusers where chat_id = $1`, [chatToBeDeletedId]);
+    await db.query(`delete from messages where chat_id = $1`, [chatToBeDeletedId]);
+    await db.query(`delete from chats where chat_id = $1 RETURNING *`, [chatToBeDeletedId]);
+
+    return res.status(200).json({message: 'success', chatId: chatToBeDeletedId});
+
+
+
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
+exports.addUserToChat = async (req, res) => {
+  if (!req.isAuth) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+
+  const chatId = +req.query.chatId;
+
+  if (!chatId || chatId == null) {
+    return res.status(500).json({ message: "You must provide chat id" });
+  }
+
+  const users = req.body.users;
+  if (users.length <= 0) {
+    return res.status(500).json({ message: "users are not provided" });
+  }
+
+  try {
+    const offset = 1;
+    const selectSQLPlaceholders = users.map(function(name,i) { 
+      return '$'+(i+offset); 
+    }).join(',');
+
+    const selectSQL = await db.query("select user_id, email, avatar, gender, concat(first_name, ' ', last_name) as full_name from users where email in (" + selectSQLPlaceholders+")", users);
+    const valuesChatUsers = selectSQL.rows.map(u => [chatId, +u.user_id, new Date()]);
+
+    const sqlFormat = format('INSERT INTO chatusers (chat_id, user_id, createdat) VALUES %L', valuesChatUsers);
+
+    await db.query(sqlFormat);
+    await db.query(`update chats set type = $1 where chat_id = $2`, ['group', chatId]);
+
+    return res.status(200).json(selectSQL.rows.map(u => {
+      return {
+        ...u,
+        user_id: undefined
+      };
+    }));
+  } catch(err) {
+    console.log(err);
+    return res.status(500).json({ message: "Server Error" });
+  }
+
+};
+
+
+exports.leaveChat = async (req, res) => {
+  if (!req.isAuth) {
+    return res.status(403).json({ message: "Not Authorized" });
+  }
+
+  const chatId = +req.query.chatId;
+
+  if (!chatId || chatId == null) {
+    return res.status(500).json({ message: "You must provide chat id" });
+  }
+
+  try {
+    const foundChat = await db.query(`select * from chats where chat_id = $1`, [chatId]);
+    if (foundChat.rows[0].created_by == req.user.user_id) {
+      return res.status(500).json({ message: "You can not leave this chat as you are the admin" });
+    }
+
+    await db.query(`delete from chatusers where chat_id = $1 AND user_id = $2`, [chatId, req.user.user_id]);
+
+    const numberOfUsersInChat = await db.query(`select count(user_id) from chatusers where chat_id = $1`, [chatId]);
+    if (numberOfUsersInChat.rows[0].count == 2) {
+      await db.query(`update chats set type = $1 where chat_id = $2`, ['dual', chatId]);
+    }
+
+    return res.status(200).json({message: 'success', chatId: chatId});
 
   } catch(err) {
     console.log(err);
