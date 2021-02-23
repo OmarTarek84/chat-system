@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "cross-env NODE_ENV=production node server.js",
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
