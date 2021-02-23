@@ -17,6 +17,15 @@ const chatRoutes = require('./routes/chat');
 app.prepare().then(() => {
   const server = express();
 
+  server.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(200);
+    }
+    next();
+  });
+
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
   server.use(
