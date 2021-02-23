@@ -4,8 +4,8 @@ const { validationResult } = require("express-validator");
 
 const s3 = new AWS.S3({
   signatureVersion: "v4",
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_KEY,
+  accessKeyId: process.env.AWSS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWSS_SECRET_KEY,
   region: "us-east-2",
 });
 
