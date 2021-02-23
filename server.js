@@ -4,6 +4,7 @@ const next = require("next");
 const bodyParser = require("body-parser");
 const morgan = require('morgan');
 const socketIO = require('./socket/index');
+const cors = require('cors');
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -17,17 +18,11 @@ const chatRoutes = require('./routes/chat');
 app.prepare().then(() => {
   const server = express();
 
-  server.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Headers", "*");
-    res.setHeader("Access-Control-Allow-Methods", "*");
-    if (req.method === "OPTIONS") {
-      return res.sendStatus(200);
-    }
-    next();
-  });
-
   server.use(bodyParser.json());
   server.use(bodyParser.urlencoded({ extended: true }));
+
+  server.use(cors());
+
   server.use(
     morgan(":method :url :status :res[content-length] - :response-time ms")
   );
