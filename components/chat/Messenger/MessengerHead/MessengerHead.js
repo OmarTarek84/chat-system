@@ -5,12 +5,12 @@ import { deleteChat, leaveChat } from "../../../../redux/actions/chat";
 import AddUsersModal from "../../../AddUsersModal/AddUsersModal";
 import UsersOnline from "./UsersOnline/UsersOnline";
 
-const MessengerHead = ({onlineUsers}) => {
+const MessengerHead = ({onlineUsers, leaveChatSocket, deleteChatSocket, addUserToChatSocket}) => {
   const [openChatActionsBox, setopenChatActionsBox] = useState(false);
   const [addUsersModal, setaddUsersModal] = useState(false);
 
   const {chats} = useSelector(state => state.chat);
-  const {email} = useSelector(state => state.user);
+  const {email, first_name, last_name} = useSelector(state => state.user);
 
   const dispatch = useDispatch();
 
@@ -34,18 +34,18 @@ const MessengerHead = ({onlineUsers}) => {
     };
   }, [openChatActionsBox]);
 
-  const deleteChatReq = () => {
-    dispatch(deleteChat(router.query.chatId)).then(() => {
-        setopenChatActionsBox(false);
-        const beforeChatExist = chats[chats.length - 2] && chats[chats.length - 2].chatdetails.chat_id;
-        router.replace({
-          pathname: '',
-          query: {
-            chatId: beforeChatExist ?
-                      encodeURI(chats[chats.length - 2].chatdetails.chat_id):
-                        chats[0] ? chats[0].chatdetails.chat_id: undefined
-          }
-        });
+  const deleteChatReq = async () => {
+    await dispatch(deleteChat(router.query.chatId));
+    setopenChatActionsBox(false);
+    deleteChatSocket(router.query.chatId);
+    const beforeChatExist = chats[chats.length - 2] && chats[chats.length - 2].chatdetails.chat_id;
+    router.replace({
+      pathname: '',
+      query: {
+        chatId: beforeChatExist ?
+                  encodeURI(chats[chats.length - 2].chatdetails.chat_id):
+                    chats[0] ? chats[0].chatdetails.chat_id: undefined
+      }
     });
   };
 
@@ -54,6 +54,7 @@ const MessengerHead = ({onlineUsers}) => {
     if (resDispatch.type === 'LEAVE_CHAT') {
       setopenChatActionsBox(false);
       const beforeChatExist = chats[chats.length - 2] && chats[chats.length - 2].chatdetails.chat_id;
+      leaveChatSocket(router.query.chatId);
       router.replace({
         pathname: '',
         query: {
@@ -203,7 +204,7 @@ const MessengerHead = ({onlineUsers}) => {
         )}
       </div>
     </div>
-    {addUsersModal && <AddUsersModal addNewChat={false} chatId={router.query.chatId} closeModal={() => setaddUsersModal(false)} />}
+    {addUsersModal && <AddUsersModal addUserToChatSocket={addUserToChatSocket} addNewChat={false} chatId={router.query.chatId} closeModal={() => setaddUsersModal(false)} />}
     </>
   );
 };

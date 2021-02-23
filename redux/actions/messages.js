@@ -43,12 +43,13 @@ export const sendMessage = (chatId, message, type) => {
                     Authorization: 'Bearer ' + getState().user.token
                 }
             });
-            dispatch({
+            const result = await dispatch({
                 type: NEW_MESSAGE,
                 message: data,
                 chat_id: chatId,
                 latest_message_from: getState().user.first_name
             });
+            return result;
         } catch(err) {
             console.log(err);
             // const errorMessage = err.response && err.response.data && err.response.data.message

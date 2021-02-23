@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import {sendMessage} from '../../../../redux/actions/messages';
 import { useRouter } from "next/router";
 
-const ChatInput = () => {
+const ChatInput = ({emitMsgSocket}) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [inputVal, setinputVal] = useState('');
 
@@ -28,13 +28,15 @@ const ChatInput = () => {
     inputRef.current.selectionEnd = endPosition + emojiLength;
   };
 
-  const sendMessageReq = e => {
+  const sendMessageReq = async e => {
     e.preventDefault();
-    dispatch(sendMessage(+router.query.chatId, inputVal, 'text')).then(() => {
-      setinputVal('');
-      const list = document.getElementById("sc");
-      list.scrollTop = list.scrollHeight - list.clientHeight - 1;
-    });
+    const resDispatch = await dispatch(sendMessage(+router.query.chatId, inputVal, 'text'));
+    setinputVal('');
+    const list = document.getElementById("sc");
+    list.scrollTop = list.scrollHeight - list.clientHeight - 1;
+    if (resDispatch.type === "NEW_MESSAGE") {
+      emitMsgSocket(resDispatch.message, resDispatch.chat_id.toString());
+    }
   };
 
   useEffect(() => {

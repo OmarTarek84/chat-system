@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import useSocket from "../hooks/useSocket";
-import { LOGOUT } from "../redux/actions/actionTypes";
+import { useSelector } from "react-redux";
 import UpdateProfileModal from "./UpdateProfileModal";
 
 const Navbar = () => {
@@ -12,9 +10,6 @@ const Navbar = () => {
 
   const logoutBtnRef = useRef();
   const updateProfileRef = useRef();
-  const {socket} = useSocket();
-
-  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -44,14 +39,6 @@ const Navbar = () => {
     localStorage.removeItem('email');
     localStorage.removeItem('firstName');
     localStorage.removeItem('lastName');
-    dispatch({type: LOGOUT});
-    socket.current.emit("leaveRoom", {
-      chatId: router.query.chatId,
-      email: email,
-      firstName: first_name || localStorage.getItem('firstName'),
-      lastName: last_name || localStorage.getItem('lastName'),
-    });
-    socket.current.disconnect();
   };
 
   return (

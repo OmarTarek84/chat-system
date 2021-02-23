@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import UsersAddedList from "./UsersAddedList/UsersAddedList";
 import { addChat, addUsersToChat } from "../../redux/actions/chat";
 
-const AddUsersModal = ({closeModal, addNewChat, chatId}) => {
+const AddUsersModal = ({closeModal, addNewChat, chatId, addUserToChatSocket, addChatSocket}) => {
   const [users, setUsers] = useState([]);
   const [usersAdded, setUsersAdded] = useState([]);
   const router = useRouter();
@@ -49,6 +49,7 @@ const AddUsersModal = ({closeModal, addNewChat, chatId}) => {
 
       const resDispatchAddChat = await dispatch(addChat(usersMails));
       if (resDispatchAddChat.type === 'ADD_CHAT') {
+        addChatSocket(resDispatchAddChat.chat);
         router.replace({
           pathname: '',
           query: {
@@ -63,7 +64,9 @@ const AddUsersModal = ({closeModal, addNewChat, chatId}) => {
       if (chatId === undefined) return null;
 
       const resDispatch = await dispatch(addUsersToChat(chatId, usersMails));
-      
+      if (resDispatch.type === "ADD_USERS_TO_CHAT") {
+        addUserToChatSocket(resDispatch.chatId, resDispatch.addedUsers);
+      }
 
     }
     closeModal();

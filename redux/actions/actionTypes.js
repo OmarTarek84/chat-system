@@ -12,6 +12,7 @@ export const ADD_CHAT = 'ADD_CHAT';
 export const DELETE_CHAT = 'DELETE_CHAT';
 export const ADD_USERS_TO_CHAT = 'ADD_USERS_TO_CHAT';
 export const LEAVE_CHAT = 'LEAVE_CHAT';
+export const USER_LEAVE_CHAT = 'USER_LEAVE_CHAT';
 
 export const FETCH_MESSAGES = 'FETCH_MESSAGES';
 export const FETCH_MESSAGES_ERROR = 'FETCH_MESSAGES_ERROR';

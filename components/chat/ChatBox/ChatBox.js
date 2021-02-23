@@ -5,7 +5,7 @@ import { fetchChats } from "../../../redux/actions/chat";
 import AddUsersModal from "../../AddUsersModal/AddUsersModal";
 import ChatList from "./ChatList/ChatList";
 
-const ChatBox = () => {
+const ChatBox = ({addChatSocket}) => {
 
   const {chats, chatLoading, chatError} = useSelector(state => state.chat);
   const [addUsersModal, setaddUsersModal] = useState(false);
@@ -42,7 +42,7 @@ const ChatBox = () => {
       </div>
       <ChatList chats={chats} chatLoading={chatLoading} />
     </div>
-    {addUsersModal && <AddUsersModal addNewChat={true} closeModal={() => setaddUsersModal(false)} />}
+    {addUsersModal && <AddUsersModal addChatSocket={addChatSocket} addNewChat={true} closeModal={() => setaddUsersModal(false)} />}
     </>
   );
 };
