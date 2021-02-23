@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 import { SIGN_IN_SUCCESS } from "../redux/actions/actionTypes";
 import axios from "../axios/axios";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router';
 
 
@@ -12,6 +12,8 @@ const BaseLayout = (props) => {
 
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const {token} = useSelector(state => state.user);
 
     useEffect(() => {
       const getUser = async () => {
@@ -27,7 +29,9 @@ const BaseLayout = (props) => {
       };
   
       if (localStorage.getItem("token")) {
-        getUser();
+        if (!token) {
+          getUser();
+        }
       } else {
         router.push('/auth');
       }

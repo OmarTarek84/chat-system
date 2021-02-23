@@ -3,6 +3,7 @@ const next = require("next");
 
 const bodyParser = require("body-parser");
 const morgan = require('morgan');
+const socketIO = require('./socket/index');
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -31,8 +32,11 @@ app.prepare().then(() => {
 
 
 
-  server.listen(port, (err) => {
+  const expressServer =  server.listen(port, (err) => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);
   });
+
+  socketIO(expressServer);
+
 });

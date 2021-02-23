@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-const UsersOnline = () => {
+const UsersOnline = ({onlineUsers}) => {
 
     const {chats} = useSelector(state => state.chat);
     const router = useRouter();
@@ -14,7 +14,9 @@ const UsersOnline = () => {
         return (
           <div className="username-onlinestatus" key={user.email}>
             <span className="first-lastname">{user.full_name}</span>
-            <span className="offline-online"></span>
+            <span className="offline-online" style={{
+              backgroundColor: onlineUsers.indexOf(user.email) > -1 ? 'green': 'red'
+            }}></span>
           </div>
         )
       });

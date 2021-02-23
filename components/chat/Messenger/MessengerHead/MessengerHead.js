@@ -5,7 +5,7 @@ import { deleteChat, leaveChat } from "../../../../redux/actions/chat";
 import AddUsersModal from "../../../AddUsersModal/AddUsersModal";
 import UsersOnline from "./UsersOnline/UsersOnline";
 
-const MessengerHead = () => {
+const MessengerHead = ({onlineUsers}) => {
   const [openChatActionsBox, setopenChatActionsBox] = useState(false);
   const [addUsersModal, setaddUsersModal] = useState(false);
 
@@ -19,7 +19,6 @@ const MessengerHead = () => {
   const currentChat = chats.find(chat => chat.chatdetails.chat_id == router.query.chatId);
 
   const boxMenuRef = useRef();
-  
 
   useEffect(() => {
     const closeChatBoxOnClick = (evt) => {
@@ -70,7 +69,7 @@ const MessengerHead = () => {
     <>
     <div className="head">
       <div className="onlineusers">
-        <UsersOnline />
+        <UsersOnline onlineUsers={onlineUsers} />
       </div>
       <div className="chatActions" style={{
         display: router.query.chatId && router.query.chatId != null ? 'block': 'none'
