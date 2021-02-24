@@ -65,7 +65,7 @@ exports.getSignedUrl = (req, res) => {
   }
 
   try {
-    const key = `chatSystem/${req.user.first_name}-${req.user.last_name}${req.user.user_id}.png`;
+    const key = `chatSystem${req.user.first_name}-${req.user.last_name}${req.user.user_id}.png`;
 
     s3.getSignedUrl(
       "putObject",
