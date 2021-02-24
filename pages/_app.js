@@ -13,6 +13,9 @@ Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
 const MyApp = ({ Component, pageProps }) => {
+  if (process.env.NODE_ENV !== 'development') {
+    console.log = () => {}
+  }
   return (
     <Provider store={store}>
       <Component {...pageProps} />

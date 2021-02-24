@@ -1,4 +1,4 @@
-import { FETCH_MESSAGES, FETCH_MESSAGES_ERROR, LOGOUT, NEW_MESSAGE } from "../actions/actionTypes";
+import { DELETE_CHAT, FETCH_MESSAGES, FETCH_MESSAGES_ERROR, LOGOUT, NEW_MESSAGE } from "../actions/actionTypes";
 
 const initialState = {
   messages: [],
@@ -40,6 +40,16 @@ const messagesReducer = (state = initialState, action) => {
         messages: newMsgs
       };
     case LOGOUT:
+      return {
+        messages: [],
+        currentPage: 1,
+        pageSize: 30,
+        pages: 2,
+        chat_id: 1,
+        total_number_of_messages: 30,
+        messagesError: null
+      };
+    case DELETE_CHAT:
       return {
         messages: [],
         currentPage: 1,

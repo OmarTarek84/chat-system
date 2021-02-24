@@ -72,7 +72,7 @@ const socketServer = server => {
         socket.on('addchat', data => {
             if (!data || !data.chat.chatdetails) return;
             const usersInNewChat = data.chat.chatdetails.users.map(user => user.email);
-            socket.leave(data.prevChatId.toString());
+            socket.leave(data.prevChatId);
             // socket.broadcast.to(chat.chatId).emit('deleteChat', chat);
             activeUsers.forEach(activeuser => {
                 if (usersInNewChat.indexOf(activeuser.email) > -1 && activeuser.email !== data.chat.chatdetails.created_by) {
