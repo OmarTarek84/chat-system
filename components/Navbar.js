@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT } from "../redux/actions/actionTypes";
 import UpdateProfileModal from "./UpdateProfileModal";
 
 const Navbar = () => {
@@ -12,6 +13,7 @@ const Navbar = () => {
   const updateProfileRef = useRef();
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const closeMenuOnClick = (evt) => {
@@ -39,6 +41,7 @@ const Navbar = () => {
     localStorage.removeItem('email');
     localStorage.removeItem('firstName');
     localStorage.removeItem('lastName');
+    dispatch({type: LOGOUT});
   };
 
   return (
